@@ -2,6 +2,16 @@
 
 Todas as mudanças relevantes do projeto ficam neste arquivo. O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e as versões seguem o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [Não lançado]
+
+### Alterado
+- **Release em três jobs** (`.github/workflows/release.yml`): `testar` (conferência da tag e `npm test`), `empacotar` (conferência da tag e zips, sem `node_modules`, para que código de dependência de teste não possa alterar o que é publicado) e `publicar` (único com permissão de escrita, depende dos dois anteriores).
+- O parser (`lerAnuncio`) respeita os limites que o código de fundo exige: palavras do título com mais de 200 caracteres são descartadas e a lista é cortada em 100; os tokens são cortados em 5000, na ordem de aparição. Anúncio real não é mais recusado só por tamanho.
+- CI e Release com `timeout-minutes: 10` em todos os jobs; o CI cancela a execução anterior da mesma branch (menos na `main`) quando chega um push novo.
+- Release: os jobs `testar` e `empacotar` conferem que o commit baixado é o da tag (`GITHUB_SHA`), o `gh release create` usa `--verify-tag` e o artefato intermediário dura 1 dia.
+- Formulários de issue (problema, carro errado e sugestão): instrução para colar o link do anúncio sem parâmetros de rastreio e aviso de que a issue é pública (não colar cookies, tokens, senhas nem dados pessoais).
+- `.gitignore` passa a ignorar `.env`, `.env.*` (menos `.env.example`), `.npmrc`, `*.pem`, `*.key`, `*.p12`, `*.pfx`, `*.crx`, `*.xpi`, `web-ext-artifacts/` e `.claude/settings.local.json`.
+
 ## [0.2.0] - 2026-11-04
 
 Primeira versão publicada no GitHub (Release v0.2.0, com os zips do Chrome e do Firefox e o `SHA256SUMS`).

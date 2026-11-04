@@ -8,7 +8,7 @@ body:
     id: ideia
     attributes:
       label: O que você sugere
-      description: Descreva a ideia. Se for um site novo, diga qual e cole dois ou três links de anúncios de carro.
+      description: 'Descreva a ideia. Se for um site novo, diga qual e cole dois ou três links de anúncios de carro, sem o "?" e tudo que vem depois (links copiados trazem parâmetros de rastreio da sua conta). Esta issue é pública: não cole cookies, tokens, senhas nem dados pessoais (seus ou de terceiros).'
     validations:
       required: true
   - type: textarea

@@ -116,3 +116,25 @@ test('lerAnuncio: token com mais de 200 caracteres é descartado e os outros fic
   assert.ok(anuncio.tokens.includes('revisado') && anuncio.tokens.includes('carro'));
   assert.ok(!anuncio.tokens.some((t) => t.length > 200));
 });
+
+// Limites que o service worker exige (anuncioValido em src/background.js): o parser os respeita para nenhum anúncio real ser recusado só por tamanho.
+test('lerAnuncio: palavra do título com mais de 200 caracteres é descartada e as outras ficam', () => {
+  const anuncio = P.lerAnuncio({ titulo: '2015 Volkswagen ' + 'b'.repeat(300) + ' Voyage' });
+  assert.deepEqual(anuncio.palavras, ['volkswagen', 'voyage']);
+});
+
+test('lerAnuncio: título com 150 palavras vira no máximo 100, na ordem', () => {
+  const titulo = '2015 ' + Array.from({ length: 150 }, (_, i) => 'p' + i).join(' ');
+  const anuncio = P.lerAnuncio({ titulo });
+  assert.equal(anuncio.palavras.length, 100);
+  assert.equal(anuncio.palavras[0], 'p0');
+  assert.equal(anuncio.palavras[99], 'p99');
+});
+
+test('lerAnuncio: descrição com 6000 palavras distintas vira no máximo 5000 tokens, na ordem', () => {
+  const descricao = Array.from({ length: 6000 }, (_, i) => 'w' + i).join(' ');
+  const anuncio = P.lerAnuncio({ titulo: '2015 Gol', descricao });
+  assert.equal(anuncio.tokens.length, 5000);
+  // Título entra antes da descrição ("2015", "gol"); depois vêm as palavras da descrição na ordem.
+  assert.deepEqual(anuncio.tokens.slice(0, 4), ['2015', 'gol', 'w0', 'w1']);
+});

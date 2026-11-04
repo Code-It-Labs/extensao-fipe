@@ -1,5 +1,6 @@
-# Publicação de uma versão: ao enviar uma tag "v*", o job "empacotar" (sem permissão de escrita) confere a tag, roda os testes e gera os zips
-# do Chrome e do Firefox com o SHA256SUMS; o job "publicar" (só ele pode escrever) cria a Release com esses arquivos, sem rodar código do repositório.
+# Publicação de uma versão: ao enviar uma tag "v*", três jobs separados. "testar" confere a tag e roda os testes (é o único que instala dependências npm);
+# "empacotar" confere a tag e gera os zips do Chrome e do Firefox com o SHA256SUMS, sem node_modules, para que código de dependência de teste nunca toque o que é publicado;
+# "publicar" (só ele pode escrever) cria a Release com os arquivos do "empacotar" depois que os dois anteriores passarem, sem baixar nem rodar código do repositório.
 name: Release
 
 on:
@@ -12,8 +13,9 @@ permissions:
   contents: read
 
 jobs:
-  empacotar:
+  testar:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
     steps:
@@ -35,14 +37,52 @@ jobs:
             echo "O commit da tag $GITHUB_REF_NAME não está na main: faça o merge antes de criar a tag." >&2
             exit 1
           fi
+          # O checkout precisa ser exatamente o commit que disparou o workflow (se a tag for movida no meio, os jobs não podem divergir).
+          if [ "$(git rev-parse HEAD)" != "$GITHUB_SHA" ]; then
+            echo "O commit baixado não é o da tag $GITHUB_REF_NAME ($GITHUB_SHA): a tag foi movida durante a execução." >&2
+            exit 1
+          fi
       # Instala o Node 24, sem cache (cache de dependências em job de publicação é um risco desnecessário).
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
       # Instala as dependências de teste exatamente como no package-lock.json, sem rodar scripts de instalação.
       - run: npm ci --ignore-scripts
-      # Só segue se os testes passarem.
+      # Só deixa a publicação seguir se os testes passarem. Este job não gera nada que seja publicado.
       - run: npm test
+
+  empacotar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      # Baixa o código da tag com o histórico completo (para conferir a main) e sem deixar o token gravado no .git.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      # A mesma conferência do job "testar": este job é independente dele e não confia em outro job para isso.
+      - name: Conferir a tag
+        run: |
+          versao=$(node -p "require('./manifest.json').version")
+          if [ "v$versao" != "$GITHUB_REF_NAME" ]; then
+            echo "A tag $GITHUB_REF_NAME não bate com a versão $versao do manifest.json" >&2
+            exit 1
+          fi
+          if ! git merge-base --is-ancestor HEAD origin/main; then
+            echo "O commit da tag $GITHUB_REF_NAME não está na main: faça o merge antes de criar a tag." >&2
+            exit 1
+          fi
+          # O checkout precisa ser exatamente o commit que disparou o workflow (se a tag for movida no meio, os jobs não podem divergir).
+          if [ "$(git rev-parse HEAD)" != "$GITHUB_SHA" ]; then
+            echo "O commit baixado não é o da tag $GITHUB_REF_NAME ($GITHUB_SHA): a tag foi movida durante a execução." >&2
+            exit 1
+          fi
+      # Instala o Node 24, sem cache. Sem npm ci: o empacotador usa só módulos do próprio Node, então não existe node_modules aqui.
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
       # Gera dist/extensao-fipe-chrome-<versão>.zip e dist/extensao-fipe-firefox-<versão>.zip.
       - run: node tools/empacotar.js
       # Soma de verificação (SHA-256) dos zips, para quem baixar conferir o arquivo.
@@ -53,16 +93,19 @@ jobs:
         with:
           name: pacotes
           path: dist
+          retention-days: 1
           if-no-files-found: error
 
   publicar:
-    needs: empacotar
+    # Só publica se os testes passaram e os pacotes foram gerados.
+    needs: [testar, empacotar]
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     # Única permissão de escrita do fluxo: criar a Release.
     permissions:
       contents: write
     steps:
-      # Recebe os arquivos do job anterior. Não baixa o código do repositório nem roda npm.
+      # Recebe os arquivos do job "empacotar". Não baixa o código do repositório nem roda npm.
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: pacotes
@@ -75,4 +118,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run: gh release create "$GITHUB_REF_NAME" pacotes/* --title "$GITHUB_REF_NAME" --generate-notes
+        run: gh release create "$GITHUB_REF_NAME" pacotes/* --verify-tag --title "$GITHUB_REF_NAME" --generate-notes

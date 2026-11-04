@@ -79,7 +79,10 @@
 
   // Monta o anúncio estruturado a partir do texto cru lido da página. Só estes campos seguem para o casamento.
   function lerAnuncio({ titulo, preco, sobre, descricao }) {
-    const { ano, palavras } = dividirTitulo(titulo);
+    const dividido = dividirTitulo(titulo);
+    const ano = dividido.ano;
+    // Mesmos limites que o service worker exige (anuncioValido): palavra com mais de 200 caracteres é descartada e a lista é cortada em 100.
+    const palavras = dividido.palavras.filter((p) => p.length <= 200).slice(0, 100);
     const textoLivre = `${titulo || ''}\n${descricao || ''}`;
     let cambio = lerCambio(sobre);
     // Fronteira com \p{L} (o \b do JS não trata letra acentuada como palavra: "autêntico" casaria "aut"); "manual" no texto impede inferir automático.
@@ -93,8 +96,8 @@
       cambio,
       cilindrada: lerCilindrada(textoLivre),
       // Palavras do título + descrição, usadas para pontuar as versões da FIPE.
-      // Tokens com mais de 200 caracteres (hash, texto colado sem espaços) são descartados: o service worker rejeita o anúncio inteiro com eles.
-      tokens: [...new Set(normalizar(textoLivre).split(' ').filter((t) => t && t.length <= 200))],
+      // Tokens com mais de 200 caracteres (hash, texto colado sem espaços) são descartados e a lista é cortada em 5000 (na ordem de aparição): o service worker rejeita o anúncio inteiro acima desses limites.
+      tokens: [...new Set(normalizar(textoLivre).split(' ').filter((t) => t && t.length <= 200))].slice(0, 5000),
     };
   }
 

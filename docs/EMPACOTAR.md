@@ -32,7 +32,7 @@ O id da extensão no Firefox (`browser_specific_settings.gecko.id`, hoje `extens
    git push origin v0.2.1
    ```
 
-5. O workflow `.github/workflows/release.yml` tem dois jobs. O `empacotar` (sem permissão de escrita) confere que a tag bate com a versão do manifest e que o commit dela está na `main`, roda os testes, gera os dois zips e o `SHA256SUMS`. O `publicar` (o único com permissão de escrita, sem baixar o código nem rodar npm) confere o `SHA256SUMS` e cria a Release com notas automáticas e esses arquivos anexados. Confira o resultado na aba **Actions** e em **Releases**.
+5. O workflow `.github/workflows/release.yml` tem três jobs. O `testar` confere que a tag bate com a versão do manifest e que o commit dela está na `main`, instala as dependências de teste e roda `npm test`. O `empacotar` repete a conferência da tag, **não instala dependência nenhuma** (o empacotador usa só módulos do próprio Node) e gera os dois zips e o `SHA256SUMS`. O `publicar` (o único com permissão de escrita, sem baixar o código nem rodar npm) só começa se os dois anteriores passarem, confere o `SHA256SUMS` e cria a Release com notas automáticas e esses arquivos anexados. Os testes rodam separados do empacotamento de propósito: código de dependência de teste (jsdom e suas dependências) nunca roda no mesmo diretório em que os zips são gerados, então não pode alterar o que vai para a Release. Confira o resultado na aba **Actions** e em **Releases**.
 
 Se o workflow falhar depois de criar a tag, apague a tag (`git push --delete origin <tag>` e `git tag -d <tag>`), corrija e crie de novo.
 

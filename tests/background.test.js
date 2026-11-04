@@ -135,3 +135,12 @@ test('casar recusa anúncio fora do formato ou grande demais, sem consultar a FI
   const semAno = await sw.enviar({ tipo: 'casar', anuncio: { ...bom, ano: null } });
   assert.equal(semAno.ok, true);
 });
+
+test('casar aceita anúncio gigante já limitado pelo parser (não recusa só por tamanho)', async () => {
+  const sw = subir(criarFake().fetch);
+  const titulo = '2015 Volkswagen Voyage ' + 'b'.repeat(300) + ' ' + Array.from({ length: 150 }, (_, i) => 'p' + i).join(' ');
+  const descricao = Array.from({ length: 6000 }, (_, i) => 'w' + i).join(' ');
+  const resp = await sw.enviar({ tipo: 'casar', anuncio: P.lerAnuncio({ titulo, descricao }) });
+  assert.notEqual(resp.erro && resp.erro.tipo, 'pedido');
+  assert.equal(resp.ok, true);
+});

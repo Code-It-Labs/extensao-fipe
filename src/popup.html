@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!-- Popup de ajuda da extensão (abre ao clicar no ícone): explica o que ela faz, como usar e a privacidade. Estilo em popup.css, script em popup.js. -->
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FIPE no Marketplace e OLX</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- O que a extensão faz. -->
+  <h1>FIPE no Marketplace e OLX</h1>
+  <p>Mostra, no anúncio de carro do Facebook Marketplace ou da OLX, o valor da Tabela FIPE e a diferença para o preço pedido.</p>
+
+  <!-- Como usar. -->
+  <h2>Como usar</h2>
+  <ol>
+    <li>Abra um anúncio de carro no Facebook Marketplace ou na OLX.</li>
+    <li>O selo aparece no canto inferior direito da página.</li>
+    <li>Se o selo não aparecer, aperte <strong>F5</strong> para recarregar a página.</li>
+  </ol>
+
+  <!-- Como ler o selo. -->
+  <h2>Como ler o selo</h2>
+  <ul>
+    <li><strong>Provável</strong>: a versão do carro que parece ser a do anúncio, pelo texto escrito nele. Confira se é essa mesmo.</li>
+    <li><strong>Faixa de valores</strong>: quando o anúncio não diz a versão, o selo mostra do menor ao maior valor das versões possíveis.</li>
+    <li><strong>Escolha a versão</strong>: nesse caso, use a lista do selo para escolher a versão certa e ver o valor dela.</li>
+  </ul>
+
+  <!-- Aviso de uso. -->
+  <p class="aviso"><strong>Atenção:</strong> a FIPE é só uma referência. Preço abaixo da FIPE não garante bom negócio: confira o estado do carro, a documentação e o histórico.</p>
+
+  <!-- Privacidade. -->
+  <h2>Privacidade</h2>
+  <p>No Facebook Marketplace e na OLX, só códigos de marca, modelo e ano (do carro e, se a versão não é clara, de modelos parecidos) são enviados a um serviço público e não oficial de consulta à FIPE (fipe.parallelum.com.br) que, como todo site, recebe o endereço de IP. Nada do anúncio, do anunciante nem da página sai do navegador. O cache e as versões que você escolhe ficam só no navegador. A extensão não tem conta nem rastreamento.</p>
+
+  <!-- Versão, preenchida por popup.js. -->
+  <p class="versao">Versão <span id="versao"></span></p>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+# Formulário de issue para quando o selo identifica o carro ou a versão errada (alimenta o conjunto de teste do casamento).
+name: Carro errado
+description: O selo mostrou outro carro ou outra versão, ou "Não encontrei na FIPE" para um carro que existe
+title: "[Carro errado] "
+labels: ["casamento"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Este é o relato mais útil para o projeto. Lembre que, quando o anúncio não diz a versão, o selo mostra uma faixa e uma lista para você escolher: isso é esperado.
+
+        Se colar captura de tela, **corte a imagem só no selo** e esconda nomes, fotos e dados de pessoas (anunciante, vendedor, mensagens).
+  - type: input
+    id: link
+    attributes:
+      label: Link do anúncio
+      description: Se o anúncio já saiu do ar, escreva o título e o ano do carro.
+    validations:
+      required: true
+  - type: dropdown
+    id: site
+    attributes:
+      label: Site
+      options:
+        - Facebook Marketplace
+        - OLX
+        - Outro
+    validations:
+      required: true
+  - type: textarea
+    id: selo
+    attributes:
+      label: Texto do selo
+      description: 'Copie o que o selo mostrou (valor, versão, faixa ou a linha "Li: marca..., modelo..., ano ...").'
+    validations:
+      required: true
+  - type: textarea
+    id: fipe-oficial
+    attributes:
+      label: Versão e valor no site oficial da FIPE (opcional)
+      description: Se você conferiu, diga qual é a versão certa e o valor do mês.
+  - type: input
+    id: versao-extensao
+    attributes:
+      label: Versão da extensão
+      description: Aparece ao clicar no ícone da extensão.
+      placeholder: "0.2.0"

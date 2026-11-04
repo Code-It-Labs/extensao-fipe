@@ -1,0 +1,26 @@
+{
+  "name": "extensao-fipe",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Extensão de navegador que mostra o valor da Tabela FIPE e a diferença para o preço pedido em anúncios de carro do Facebook Marketplace e da OLX. O package.json serve só ao npm test; a extensão não tem dependências nem build (o jsdom é só dos testes do leitor de página).",
+  "license": "MIT",
+  "author": "Code It Labs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Code-It-Labs/extensao-fipe.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Code-It-Labs/extensao-fipe/issues"
+  },
+  "homepage": "https://github.com/Code-It-Labs/extensao-fipe#readme",
+  "keywords": ["fipe", "tabela-fipe", "extensao", "chrome-extension", "firefox-addon", "facebook-marketplace", "olx", "carros", "veiculos", "brasil"],
+  "engines": {
+    "node": ">=24.15"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "jsdom": "^30.1.3"
+  }
+}

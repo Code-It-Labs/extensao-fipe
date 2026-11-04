@@ -1,0 +1,48 @@
+/* Estilo do popup de ajuda. Claro por padrão e escuro via prefers-color-scheme; contraste mínimo de 4,5:1 nos dois. */
+/* Cores em variáveis para trocar de tema num lugar só. */
+:root {
+  --fundo: #ffffff;
+  --texto: #1c1e21;
+  --apoio: #4b4f56;
+  --destaque: #1a56c4;
+  --aviso-fundo: #fff4d6;
+  --aviso-texto: #5c3b00;
+}
+
+/* Tema escuro do sistema. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fundo: #1c1e21;
+    --texto: #f0f2f5;
+    --apoio: #b0b3b8;
+    --destaque: #7ab0ff;
+    --aviso-fundo: #4a3a10;
+    --aviso-texto: #ffe9b0;
+  }
+}
+
+/* Corpo: largura fixa e fonte de 15 px para leitura confortável. */
+body {
+  box-sizing: border-box;
+  width: 360px;
+  margin: 0;
+  padding: 14px 16px;
+  background: var(--fundo);
+  color: var(--texto);
+  font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* Títulos. */
+h1 { margin: 0 0 6px; font-size: 18px; color: var(--destaque); }
+h2 { margin: 14px 0 4px; font-size: 15px; }
+
+/* Parágrafos e listas. */
+p { margin: 4px 0; }
+ol, ul { margin: 4px 0; padding-left: 20px; }
+li { margin: 3px 0; }
+
+/* Caixa de aviso sobre a FIPE ser só referência. */
+.aviso { margin-top: 12px; padding: 8px 10px; background: var(--aviso-fundo); color: var(--aviso-texto); border-radius: 6px; }
+
+/* Linha de versão no rodapé. */
+.versao { margin-top: 12px; color: var(--apoio); font-size: 13px; }

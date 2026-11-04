@@ -1,0 +1,7 @@
+# Arquivos que não vão para o repositório: dependências de teste, pacotes gerados, lixo do sistema e logs.
+node_modules/
+dist/
+.DS_Store
+*.log
+# Estado interno de trabalho (não é documentação pública).
+docs/ESTADO.md

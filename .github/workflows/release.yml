@@ -1,0 +1,78 @@
+# Publicação de uma versão: ao enviar uma tag "v*", o job "empacotar" (sem permissão de escrita) confere a tag, roda os testes e gera os zips
+# do Chrome e do Firefox com o SHA256SUMS; o job "publicar" (só ele pode escrever) cria a Release com esses arquivos, sem rodar código do repositório.
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+# Nada de escrita por padrão: cada job pede só o que precisa.
+permissions:
+  contents: read
+
+jobs:
+  empacotar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      # Baixa o código da tag com o histórico completo (para conferir a main) e sem deixar o token gravado no .git.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      # A tag precisa ser igual à versão do manifest (v0.2.0 -> 0.2.0) e apontar para um commit que já está na main.
+      # Roda antes do npm ci: se a conferência falhar, nenhum código de dependência é executado.
+      - name: Conferir a tag
+        run: |
+          versao=$(node -p "require('./manifest.json').version")
+          if [ "v$versao" != "$GITHUB_REF_NAME" ]; then
+            echo "A tag $GITHUB_REF_NAME não bate com a versão $versao do manifest.json" >&2
+            exit 1
+          fi
+          if ! git merge-base --is-ancestor HEAD origin/main; then
+            echo "O commit da tag $GITHUB_REF_NAME não está na main: faça o merge antes de criar a tag." >&2
+            exit 1
+          fi
+      # Instala o Node 24, sem cache (cache de dependências em job de publicação é um risco desnecessário).
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      # Instala as dependências de teste exatamente como no package-lock.json, sem rodar scripts de instalação.
+      - run: npm ci --ignore-scripts
+      # Só segue se os testes passarem.
+      - run: npm test
+      # Gera dist/extensao-fipe-chrome-<versão>.zip e dist/extensao-fipe-firefox-<versão>.zip.
+      - run: node tools/empacotar.js
+      # Soma de verificação (SHA-256) dos zips, para quem baixar conferir o arquivo.
+      - name: Gerar o SHA256SUMS
+        run: cd dist && sha256sum *.zip > SHA256SUMS
+      # Entrega os zips e o SHA256SUMS ao job que publica.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: pacotes
+          path: dist
+          if-no-files-found: error
+
+  publicar:
+    needs: empacotar
+    runs-on: ubuntu-latest
+    # Única permissão de escrita do fluxo: criar a Release.
+    permissions:
+      contents: write
+    steps:
+      # Recebe os arquivos do job anterior. Não baixa o código do repositório nem roda npm.
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: pacotes
+          path: pacotes
+      # Confere as somas de verificação antes de publicar.
+      - name: Conferir o SHA256SUMS
+        run: cd pacotes && sha256sum -c SHA256SUMS
+      # Cria a Release com notas automáticas e anexa os zips e o SHA256SUMS (o gh já vem no runner; sem checkout ele precisa saber o repositório).
+      - name: Criar a Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh release create "$GITHUB_REF_NAME" pacotes/* --title "$GITHUB_REF_NAME" --generate-notes

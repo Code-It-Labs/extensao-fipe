@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "FIPE no Marketplace e OLX",
+  "version": "0.2.0",
+  "description": "Mostra o valor da Tabela FIPE e a diferença para o preço pedido nos anúncios de carro do Facebook Marketplace e da OLX.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "FIPE no Marketplace e OLX",
+    "default_popup": "src/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://fipe.parallelum.com.br/*"
+  ],
+  "background": {
+    "scripts": ["src/parser.js", "src/fipe.js", "src/background.js"],
+    "service_worker": "src/background.js"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "extensao-fipe@codeitlabs.com.br",
+      "strict_min_version": "127.0"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.facebook.com/marketplace/*"],
+      "js": ["src/parser.js", "src/ciclo.js", "src/selo-comum.js", "src/content-facebook.js"],
+      "css": ["src/selo.css"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://*.olx.com.br/*"],
+      "js": ["src/parser.js", "src/ciclo.js", "src/selo-comum.js", "src/content-olx.js"],
+      "css": ["src/selo.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

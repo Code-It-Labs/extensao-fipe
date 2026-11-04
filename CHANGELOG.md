@@ -2,9 +2,9 @@
 
 Todas as mudanças relevantes do projeto ficam neste arquivo. O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e as versões seguem o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
-## [0.2.0] - ainda não publicada
+## [0.2.0] - 2026-11-04
 
-Primeira versão pensada para publicação no GitHub. A data entra aqui quando a tag `v0.2.0` for criada.
+Primeira versão publicada no GitHub (Release v0.2.0, com os zips do Chrome e do Firefox e o `SHA256SUMS`).
 
 ### Adicionado
 - Suporte à **OLX** (`src/content-olx.js`), ao lado do Facebook Marketplace. O selo, o ciclo de leitura e a escolha salva ficam em `src/selo-comum.js`, compartilhados pelos dois sites.

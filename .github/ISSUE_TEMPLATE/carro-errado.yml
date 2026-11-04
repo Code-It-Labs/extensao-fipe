@@ -10,11 +10,13 @@ body:
         Este é o relato mais útil para o projeto. Lembre que, quando o anúncio não diz a versão, o selo mostra uma faixa e uma lista para você escolher: isso é esperado.
 
         Se colar captura de tela, **corte a imagem só no selo** e esconda nomes, fotos e dados de pessoas (anunciante, vendedor, mensagens).
+
+        **Esta issue é pública: não cole cookies, tokens, senhas nem dados pessoais (seus ou de terceiros).**
   - type: input
     id: link
     attributes:
       label: Link do anúncio
-      description: Se o anúncio já saiu do ar, escreva o título e o ano do carro.
+      description: 'Cole só até /marketplace/item/<número>/ (Facebook) ou o endereço sem "?" e tudo depois (links copiados trazem parâmetros de rastreio da sua conta). Se o anúncio já saiu do ar, escreva o título e o ano do carro.'
     validations:
       required: true
   - type: dropdown

@@ -5,3 +5,17 @@ dist/
 *.log
 # Estado interno de trabalho (não é documentação pública).
 docs/ESTADO.md
+# Segredos e configuração local que nunca devem ir para o repositório público.
+.env
+.env.*
+*.pem
+*.key
+.claude/settings.local.json
+# Chaves e artefatos de publicação nas lojas e credenciais de registro; o exemplo de configuração pode ser versionado.
+.npmrc
+*.p12
+*.pfx
+*.crx
+*.xpi
+web-ext-artifacts/
+!.env.example

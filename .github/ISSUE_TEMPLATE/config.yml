@@ -1,0 +1,6 @@
+# Configuração dos formulários de issue: obriga a escolher um formulário e aponta falhas de segurança para o canal privado.
+blank_issues_enabled: false
+contact_links:
+  - name: Falha de segurança
+    url: https://github.com/Code-It-Labs/extensao-fipe/security/advisories/new
+    about: Reporte em privado, sem abrir issue pública (veja o SECURITY.md).

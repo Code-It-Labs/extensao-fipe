@@ -1,0 +1,28 @@
+# Integração contínua: roda os testes offline em todo push na main e em todo pull request.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    steps:
+      # Baixa o código do repositório, sem deixar o token gravado no .git.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Instala o Node 24 (a extensão só usa Node nos testes).
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+      # Instala as dependências de teste exatamente como no package-lock.json, sem rodar scripts de instalação.
+      - run: npm ci --ignore-scripts
+      # Roda os testes (offline, sem consultar a API real).
+      - run: npm test

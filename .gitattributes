@@ -1,0 +1,4 @@
+# Finais de linha sempre LF (também no Windows), para os arquivos de texto serem iguais em qualquer máquina e nos pacotes.
+* text=auto eol=lf
+# Imagens são binárias: o Git não mexe nelas.
+*.png binary

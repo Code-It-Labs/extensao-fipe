@@ -1,0 +1,11 @@
+# Dependabot: abre pull requests semanais para atualizar as actions dos workflows (fixadas por SHA) e as dependências de teste do npm.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly

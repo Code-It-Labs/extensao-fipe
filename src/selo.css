@@ -1,0 +1,42 @@
+/* Estilo do selo FIPE injetado na página do Marketplace. Todas as classes têm o prefixo fipe-selo para não
+   colidir com o Facebook; "all: initial" isola o selo do CSS da página. Cores com contraste mínimo de 4,5:1. */
+/* Caixa fixa no canto inferior direito. */
+#fipe-selo-ext {
+  all: initial;
+  display: block;
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 2147483000;
+  box-sizing: border-box;
+  max-width: 340px;
+  padding: 10px 12px;
+  background: #ffffff;
+  color: #1c1e21;
+  border: 1px solid #8a8d91;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  font: 13px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* Todos os filhos usam box-sizing de borda. */
+#fipe-selo-ext * { box-sizing: border-box; }
+
+/* Linha de destaque: valor FIPE. */
+#fipe-selo-ext .fipe-selo__titulo { font-size: 15px; font-weight: 700; margin: 0 0 4px; }
+
+/* Linha de apoio (modelo casado, texto lido). */
+#fipe-selo-ext .fipe-selo__apoio { margin: 2px 0; color: #4b4f56; font-size: 12px; }
+
+/* Diferença para o preço pedido: abaixo da FIPE em verde, acima em vermelho. */
+#fipe-selo-ext .fipe-selo__bom { margin: 4px 0; font-weight: 700; color: #1b6e3c; }
+#fipe-selo-ext .fipe-selo__ruim { margin: 4px 0; font-weight: 700; color: #b3261e; }
+
+/* Aviso de confiança baixa ou de ambiguidade. */
+#fipe-selo-ext .fipe-selo__aviso { margin: 6px 0 2px; padding: 4px 6px; background: #fff4d6; color: #5c3b00; border-radius: 4px; }
+
+/* Mensagem de erro. */
+#fipe-selo-ext .fipe-selo__erro { margin: 2px 0; color: #b3261e; font-weight: 600; }
+
+/* Seletor de versão quando o casamento é ambíguo. */
+#fipe-selo-ext .fipe-selo__select { display: block; width: 100%; margin-top: 6px; padding: 4px; font: inherit; color: #1c1e21; background: #ffffff; border: 1px solid #8a8d91; border-radius: 4px; }

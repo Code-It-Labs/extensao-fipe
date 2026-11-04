@@ -1,0 +1,19 @@
+# Formulário de issue para sugestões: site novo, melhoria ou ideia.
+name: Sugestão
+description: Um site novo, uma melhoria ou uma ideia
+title: "[Sugestão] "
+labels: ["sugestão"]
+body:
+  - type: textarea
+    id: ideia
+    attributes:
+      label: O que você sugere
+      description: Descreva a ideia. Se for um site novo, diga qual e cole dois ou três links de anúncios de carro.
+    validations:
+      required: true
+  - type: textarea
+    id: motivo
+    attributes:
+      label: Por que seria útil
+    validations:
+      required: false

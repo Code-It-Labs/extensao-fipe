@@ -1,0 +1,56 @@
+# Formulário de issue para defeitos da extensão (o selo não aparece, erro, comportamento estranho).
+name: Defeito
+description: A extensão não funciona como esperado (o selo não aparece, dá erro, etc.)
+title: "[Defeito] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado por avisar. Se o selo mostra o **carro ou a versão errada**, use o formulário "Carro errado".
+        Antes de abrir, tente apertar **F5** na página do anúncio e confira se a extensão está ligada.
+
+        Se colar captura de tela, **corte a imagem só no selo** e esconda nomes, fotos e dados de pessoas (anunciante, vendedor, mensagens).
+  - type: input
+    id: navegador
+    attributes:
+      label: Navegador e versão
+      description: Por exemplo, Chrome 157 no macOS, ou Firefox 159 no Windows 11.
+    validations:
+      required: true
+  - type: input
+    id: versao-extensao
+    attributes:
+      label: Versão da extensão
+      description: Aparece ao clicar no ícone da extensão.
+      placeholder: "0.2.0"
+  - type: dropdown
+    id: site
+    attributes:
+      label: Site
+      options:
+        - Facebook Marketplace
+        - OLX
+        - Outro
+    validations:
+      required: true
+  - type: input
+    id: link
+    attributes:
+      label: Link do anúncio
+      description: Se o anúncio já saiu do ar, escreva o título e o ano do carro.
+    validations:
+      required: true
+  - type: textarea
+    id: mostrou
+    attributes:
+      label: O que o selo mostrou
+      description: "Copie o texto do selo ou descreva o que aconteceu (por exemplo, nada apareceu ou mensagem de erro). Se quiser, cole uma captura de tela cortada só no selo (sem nomes, fotos nem dados de pessoas)."
+    validations:
+      required: true
+  - type: textarea
+    id: esperava
+    attributes:
+      label: O que você esperava
+    validations:
+      required: true

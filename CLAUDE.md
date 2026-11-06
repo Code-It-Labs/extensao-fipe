@@ -53,3 +53,14 @@ node tools/empacotar.js                    # gera dist/*.zip (Chrome e Firefox)
 - A OLX bloqueia `curl` (403) e requisições automáticas em sequência: as páginas de teste dela são sintéticas, feitas do texto de páginas reais inspecionadas à mão. O leitor da OLX só lê preço, nome do carro e descrição do JSON-LD (nunca o anunciante) e não depende do `<h1>` (o Firefox recebe a página sem ele).
 - `host_permissions` só da FIPE (sem Facebook nem OLX): funcionou no Chrome 157 e no Firefox 159; se faltar selo em outro navegador, recolocar o site em `host_permissions` e em `tests/manifest.test.js`.
 - O zip do Firefox não é assinado: só serve como complemento temporário.
+
+## 8. Estado e documentos vivos
+<!-- Repositório público: manter neutro, sem nomes pessoais nem processo interno. A sessão é descartável: o estado vive nestes arquivos. -->
+- **Backlog:** `docs/BACKLOG.md` (público).
+- **Estado interno:** `docs/ESTADO.md` fica só na cópia de trabalho (ignorado pelo git, não vai para o repositório). A sessão é reaberta a partir dele e deste arquivo; atualizar ao concluir cada tarefa e antes de compactar.
+- **Decisões:** `docs/DECISOES.md` (data, decisão, motivo), criado na primeira decisão que precisar de registro; neutro, como o backlog.
+
+## 9. Autonomia (norma 12.10)
+- **Decide sozinho:** o que é do projeto e reversível (código por PR com testes, documentos, rascunhos em branch de trabalho).
+- **Avisa a coordenação:** ferramenta nova, custo, PR e publicação de release (a tag `vX.Y.Z` dispara o release).
+- **Só o mantenedor decide:** dinheiro, publicar (lojas e Releases), apagar sem volta, segurança e marca.
